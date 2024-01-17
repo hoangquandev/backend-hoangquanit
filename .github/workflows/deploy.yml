@@ -1,0 +1,23 @@
+name: Auto Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Deploy to VPS
+        run: |
+          ssh root@62.72.56.96 'cd /home/backend-hoangquanit && git pull origin main && npm install && pm2 restart backend-hoangquanit'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
